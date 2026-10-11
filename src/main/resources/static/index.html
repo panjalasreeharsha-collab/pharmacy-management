@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f8f7">
+  <meta name="description" content="A clear, reliable dashboard for managing pharmacy medicine stock, expiry dates, and supplier orders.">
+  <title>Medstock — Pharmacy inventory</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/js/app.js"></script>
+</head>
+<body>
+  <main class="auth-screen" id="auth-screen">
+    <div class="auth-brand-panel">
+      <a class="brand auth-brand" href="#" aria-label="Medstock home">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M16 5v22M5 16h22" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg></span>
+        <span class="brand-name">medstock<span>.</span><small>PHARMACY MANAGER</small></span>
+      </a>
+      <div class="auth-illustration" aria-hidden="true">
+        <span class="auth-circle auth-circle-one"></span><span class="auth-circle auth-circle-two"></span>
+        <span class="auth-cross">+</span><span class="auth-bottle"><span></span><i></i><b></b></span>
+        <span class="auth-pill auth-pill-one"></span><span class="auth-pill auth-pill-two"></span>
+      </div>
+      <div class="auth-brand-copy">
+        <p class="eyebrow">A HEALTHIER WAY TO WORK</p>
+        <h1>Your stock.<br>Your store.<br><span>All in good hands.</span></h1>
+        <p>A calm, clear space to keep your medicines organised, your shelves ready, and your pharmacy moving.</p>
+      </div>
+      <p class="auth-panel-foot">Made for independent pharmacies <span>·</span> Built for better days</p>
+    </div>
+    <div class="auth-form-panel">
+      <section class="auth-card" aria-live="polite">
+        <div id="signin-panel">
+          <p class="eyebrow">WELCOME BACK</p>
+          <h2>Sign in to your store</h2>
+          <p class="auth-subtitle">Your pharmacy is right where you left it.</p>
+          <form id="signin-form" class="auth-form">
+            <label class="form-field">Username<input name="username" required maxlength="32" autocomplete="username" placeholder="Enter your username"></label>
+            <label class="form-field">Password<input name="password" type="password" required maxlength="72" autocomplete="current-password" placeholder="Enter your password"></label>
+            <button class="button button-primary auth-submit" type="submit">Sign in <span aria-hidden="true">→</span></button>
+          </form>
+          <p class="auth-switch">New to Medstock? <button type="button" data-auth-view="signup">Create a shop account</button></p>
+        </div>
+        <div id="signup-panel" hidden>
+          <p class="eyebrow">YOUR STORE STARTS HERE</p>
+          <h2>Create your shop account</h2>
+          <p class="auth-subtitle">A few details, then your own empty stockroom.</p>
+          <form id="signup-form" class="auth-form">
+            <label class="form-field">Shop name<input name="shopName" required minlength="2" maxlength="100" autocomplete="organization" placeholder="e.g. Greenwood Pharmacy"></label>
+            <label class="form-field">Username<input name="username" required minlength="3" maxlength="32" autocomplete="username" placeholder="Choose a username"><small>Start with a letter. Use letters, numbers, dots, hyphens, or underscores.</small></label>
+            <label class="form-field">Password<input name="password" type="password" required minlength="8" maxlength="72" autocomplete="new-password" placeholder="At least 8 characters"><small>Your password is encrypted before it is stored.</small></label>
+            <label class="form-field">Confirm password<input name="confirmPassword" type="password" required minlength="8" maxlength="72" autocomplete="new-password" placeholder="Enter your password again"></label>
+            <button class="button button-primary auth-submit" type="submit">Create shop account <span aria-hidden="true">→</span></button>
+          </form>
+          <p class="auth-switch">Already have an account? <button type="button" data-auth-view="signin">Sign in</button></p>
+        </div>
+        <p class="auth-message" id="auth-message" role="alert" hidden></p>
+        <div class="auth-local-note"><span aria-hidden="true">⌁</span><span>Your store is private. Only your account can see its medicine stock.</span></div>
+      </section>
+      <p class="auth-form-foot">A little more organised. A lot more peace of mind.</p>
+    </div>
+  </main>
+
+  <div class="app-shell" id="app-shell" hidden>
+    <aside class="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#" aria-label="Medstock home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none"><path d="M16 5v22M5 16h22" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg>
+        </span>
+        <span class="brand-name">medstock<span>.</span><small>PHARMACY MANAGER</small></span>
+      </a>
+
+      <div class="sidebar-label">WORKSPACE</div>
+      <nav class="nav-list">
+        <button class="nav-link is-active" data-view="dashboard" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/></svg>
+          <span>Overview</span>
+        </button>
+        <button class="nav-link" data-view="inventory" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/></svg>
+          <span>Medicine stock</span><span class="nav-count" id="nav-inventory-count">0</span>
+        </button>
+        <button class="nav-link" data-view="orders" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v17H4zM8 2v4m8-4v4M8 11h8m-8 4h5"/></svg>
+          <span>Order suggestions</span><span class="nav-count nav-count-warn" id="nav-order-count">0</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-label">YOUR STORE</div>
+        <div class="store-card">
+          <div class="store-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4"/></svg></div>
+          <div><strong id="store-name">Your pharmacy</strong><small id="store-username">Store manager</small></div>
+          <span class="online-dot" aria-label="Online"></span>
+        </div>
+        <p class="sidebar-footnote">Stock smarter. Care better.</p>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="breadcrumbs"><span>Workspace</span><span class="crumb-divider">/</span><strong id="current-page-label">Overview</strong></div>
+        <div class="topbar-actions">
+          <span class="today-label" id="today-label"></span>
+          <button class="user-avatar" id="signout-button" type="button" aria-label="Sign out" title="Sign out">MS</button>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <section class="page-view is-visible" id="dashboard-view" aria-labelledby="page-title">
+          <div class="page-heading">
+            <div><p class="eyebrow">YOUR PHARMACY AT A GLANCE</p><h1 id="page-title">Good day, <span id="greeting-username">there</span> <span class="wave">✳</span></h1><p class="heading-subtitle">Here’s what’s happening with your stock today.</p></div>
+            <button class="button button-primary" data-open-form type="button"><span class="button-plus">+</span> Add medicine</button>
+          </div>
+
+          <div class="summary-grid" id="summary-grid" aria-live="polite"></div>
+
+          <section class="dashboard-panel inventory-panel" aria-labelledby="inventory-snapshot-title">
+            <div class="panel-heading">
+              <div><p class="eyebrow">KEEP AN EYE ON</p><h2 id="inventory-snapshot-title">Stock that needs attention</h2></div>
+              <button class="text-button" data-go-view="inventory" type="button">View all stock <span aria-hidden="true">→</span></button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>MEDICINE</th><th>BATCH</th><th>AVAILABLE</th><th>REORDER AT</th><th>EXPIRY</th><th>STATUS</th><th><span class="sr-only">Actions</span></th></tr></thead>
+                <tbody id="attention-table"></tbody>
+              </table>
+            </div>
+            <div class="empty-state" id="attention-empty" hidden><span class="empty-icon">✓</span><strong>All looking good</strong><p>No low-stock or expiring medicines need attention.</p></div>
+          </section>
+
+          <div class="dashboard-lower">
+            <section class="dashboard-panel category-panel">
+              <div class="panel-heading"><div><p class="eyebrow">INVENTORY MIX</p><h2>Stock by category</h2></div><span class="subtle-tag">Units</span></div>
+              <div id="category-chart" class="category-chart"></div>
+            </section>
+            <section class="dashboard-panel tip-panel">
+              <div class="tip-art" aria-hidden="true"><span class="tip-orbit tip-orbit-one"></span><span class="tip-orbit tip-orbit-two"></span><span class="tip-cross">+</span><span class="tip-pill">✚</span></div>
+              <p class="eyebrow">A LITTLE REMINDER</p>
+              <h2>Good stock, better care.</h2>
+              <p>Keep a close eye on items nearing their reorder level and expiry date to make sure your patients always have what they need.</p>
+              <button class="text-button" data-go-view="orders" type="button">Review suggested orders <span aria-hidden="true">→</span></button>
+            </section>
+          </div>
+          <footer class="page-footer"><span>Medstock <span aria-hidden="true">·</span> Your inventory, in good hands.</span><span id="saved-indicator">Changes saved on this device</span></footer>
+        </section>
+
+        <section class="page-view" id="inventory-view" aria-labelledby="inventory-title" hidden>
+          <div class="page-heading">
+            <div><p class="eyebrow">YOUR MEDICINE CATALOG</p><h1 id="inventory-title">Medicine stock</h1><p class="heading-subtitle">Every batch, every expiry, all in one place.</p></div>
+            <button class="button button-primary" data-open-form type="button"><span class="button-plus">+</span> Add medicine</button>
+          </div>
+          <section class="dashboard-panel full-inventory-panel">
+            <div class="inventory-toolbar">
+              <label class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg><span class="sr-only">Search medicine or batch</span><input id="search-input" type="search" placeholder="Search medicine or batch..." autocomplete="off"></label>
+              <label class="filter-select"><span class="sr-only">Filter by category</span><select id="category-filter"><option value="">All categories</option></select></label>
+              <label class="filter-select"><span class="sr-only">Filter stock status</span><select id="stock-filter"><option value="">All stock levels</option><option value="low">Low stock</option><option value="in-stock">In stock</option></select></label>
+              <label class="filter-select"><span class="sr-only">Filter expiry</span><select id="expiry-filter"><option value="">All expiry dates</option><option value="soon">Expiring within 30 days</option></select></label>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>MEDICINE</th><th>BATCH</th><th>CATEGORY</th><th>UNIT PRICE</th><th>AVAILABLE</th><th>EXPIRY DATE</th><th>SUPPLIER</th><th>STATUS</th><th><span class="sr-only">Actions</span></th></tr></thead>
+                <tbody id="inventory-table"></tbody>
+              </table>
+            </div>
+            <div class="empty-state" id="inventory-empty" hidden><span class="empty-icon">⌕</span><strong>No medicines found</strong><p>Try changing your search or filters, or add a medicine to your stock.</p><button class="button button-secondary" data-clear-filters type="button">Clear filters</button></div>
+            <div class="table-footer"><span id="inventory-result-count"></span><span>Quantities reflect current on-hand stock</span></div>
+          </section>
+          <footer class="page-footer"><span>Medstock <span aria-hidden="true">·</span> Your inventory, in good hands.</span><span id="saved-indicator-inventory">Changes saved on this device</span></footer>
+        </section>
+
+        <section class="page-view" id="orders-view" aria-labelledby="orders-title" hidden>
+          <div class="page-heading">
+            <div><p class="eyebrow">RESTOCK WITH CONFIDENCE</p><h1 id="orders-title">Order suggestions</h1><p class="heading-subtitle">A helpful list of medicines that may be ready to reorder.</p></div>
+            <button class="button button-primary" id="export-orders" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 17v4h14v-4"/></svg> Export order list</button>
+          </div>
+          <div class="order-intro"><span class="order-intro-icon">↗</span><div><strong>How suggested quantities are calculated</strong><p>We suggest enough to bring your stock up to twice your reorder level: <strong>(reorder level × 2) − current stock</strong>.</p></div></div>
+          <section class="dashboard-panel orders-panel">
+            <div class="panel-heading"><div><p class="eyebrow">RESTOCK REMINDERS</p><h2 id="orders-panel-title">Items to consider ordering</h2></div><span class="subtle-tag" id="order-list-count">0 items</span></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>MEDICINE</th><th>BATCH</th><th>SUPPLIER</th><th>ON HAND</th><th>REORDER AT</th><th>SUGGESTED ORDER</th><th>UNIT PRICE</th></tr></thead>
+                <tbody id="orders-table"></tbody>
+              </table>
+            </div>
+            <div class="empty-state" id="orders-empty" hidden><span class="empty-icon">✓</span><strong>No restock needed right now</strong><p>Everything is above its reorder level. Nice work!</p><button class="button button-secondary" data-go-view="inventory" type="button">Browse medicine stock</button></div>
+          </section>
+          <footer class="page-footer"><span>Medstock <span aria-hidden="true">·</span> Your inventory, in good hands.</span><span id="saved-indicator-orders">Changes saved on this device</span></footer>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <dialog class="medicine-dialog" id="medicine-dialog" aria-labelledby="dialog-title">
+    <form id="medicine-form">
+      <div class="dialog-heading"><div><p class="eyebrow">MEDICINE DETAILS</p><h2 id="dialog-title">Add medicine</h2><p class="dialog-subtitle">Fill in the details to keep your stock up to date.</p></div><button class="icon-button dialog-close" type="button" data-close-dialog aria-label="Close dialog">×</button></div>
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label class="form-field form-field-wide">Medicine name <span class="required">*</span><input name="name" required maxlength="100" placeholder="e.g. Paracetamol 500mg"></label>
+        <label class="form-field">Batch number <span class="required">*</span><input name="batch" required maxlength="40" placeholder="e.g. PCM-2408A"></label>
+        <label class="form-field">Category <span class="required">*</span><input name="category" required maxlength="50" list="category-options" placeholder="Choose or type a category"><datalist id="category-options"></datalist></label>
+        <label class="form-field">Unit price (₹) <span class="required">*</span><input name="price" type="number" required min="0.01" step="0.01" placeholder="0.00"></label>
+        <label class="form-field">Current quantity <span class="required">*</span><input name="quantity" type="number" required min="0" step="1" placeholder="0"></label>
+        <label class="form-field">Expiry date <span class="required">*</span><input name="expiry" type="date" required></label>
+        <label class="form-field">Supplier name <span class="required">*</span><input name="supplier" required maxlength="100" placeholder="e.g. HealthFirst Distributors"></label>
+        <label class="form-field">Reorder level <span class="required">*</span><input name="reorderLevel" type="number" required min="0" step="1" placeholder="0"><small>Alert when stock reaches this quantity.</small></label>
+      </div>
+      <div class="dialog-actions"><button class="button button-secondary" type="button" data-close-dialog>Cancel</button><button class="button button-primary" type="submit" id="save-medicine-button">Save medicine</button></div>
+    </form>
+  </dialog>
+
+  <div class="toast-region" id="toast-region" role="status" aria-live="polite"></div>
+</body>
+</html>
